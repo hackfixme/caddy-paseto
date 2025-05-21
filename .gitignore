@@ -1,0 +1,7 @@
+*.exe
+*.key
+.env
+/caddy-paseto
+/dist
+/*.txt
+*.log
