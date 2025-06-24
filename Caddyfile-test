@@ -1,0 +1,26 @@
+# Caddy configuration template used in E2E tests.
+# Run with `just test --e2e`.
+{
+	order pasetoauth before basicauth
+	admin off
+	log default {
+		output stdout
+		format json
+	}
+}
+
+:0 {
+	bind 127.0.0.1
+	pasetoauth {
+		key ${CADDY_PASETO_KEY}
+		version ${CADDY_PASETO_VERSION}
+		purpose ${CADDY_PASETO_PURPOSE}
+		from_query token
+		meta_claims "role" "priority"
+		allow_users "Alice" "Bob"
+		allow_issuers "Test Issuer"
+		allow_audiences "Test Audience"
+	}
+
+	respond `{"user":"{http.auth.user.id}","role":"{http.auth.user.role}","priority":{http.auth.user.priority}}` 200
+}
