@@ -54,7 +54,7 @@ func TestPasetoAuth_Authenticate(t *testing.T) {
 		{
 			name: "ok/token_in_query",
 			setupRequest: func() *http.Request {
-				return httptest.NewRequest("GET", "/?token="+validTokenStr, nil)
+				return httptest.NewRequest(http.MethodGet, "/?token="+validTokenStr, nil)
 			},
 			expectAuth:     true,
 			expectedUserID: "user123",
@@ -62,7 +62,7 @@ func TestPasetoAuth_Authenticate(t *testing.T) {
 		{
 			name: "ok/token_in_header",
 			setupRequest: func() *http.Request {
-				req := httptest.NewRequest("GET", "/", nil)
+				req := httptest.NewRequest(http.MethodGet, "/", nil)
 				req.Header.Set("X-Token", validTokenStr)
 				return req
 			},
@@ -72,7 +72,7 @@ func TestPasetoAuth_Authenticate(t *testing.T) {
 		{
 			name: "ok/token_in_cookie",
 			setupRequest: func() *http.Request {
-				req := httptest.NewRequest("GET", "/", nil)
+				req := httptest.NewRequest(http.MethodGet, "/", nil)
 				req.AddCookie(&http.Cookie{
 					Name:  "auth",
 					Value: validTokenStr,
@@ -85,7 +85,7 @@ func TestPasetoAuth_Authenticate(t *testing.T) {
 		{
 			name: "ok/token_in_authorization_header",
 			setupRequest: func() *http.Request {
-				req := httptest.NewRequest("GET", "/", nil)
+				req := httptest.NewRequest(http.MethodGet, "/", nil)
 				req.Header.Set("Authorization", "Bearer "+validTokenStr)
 				return req
 			},
@@ -95,7 +95,7 @@ func TestPasetoAuth_Authenticate(t *testing.T) {
 		{
 			name: "ok/duplicate_tokens_ignored",
 			setupRequest: func() *http.Request {
-				req := httptest.NewRequest("GET", "/?token="+validTokenStr, nil)
+				req := httptest.NewRequest(http.MethodGet, "/?token="+validTokenStr, nil)
 				req.Header.Set("X-Token", validTokenStr) // Same token in header
 				return req
 			},
@@ -105,28 +105,28 @@ func TestPasetoAuth_Authenticate(t *testing.T) {
 		{
 			name: "err/no_token_provided",
 			setupRequest: func() *http.Request {
-				return httptest.NewRequest("GET", "/", nil)
+				return httptest.NewRequest(http.MethodGet, "/", nil)
 			},
 			expectAuth: false,
 		},
 		{
 			name: "err/expired_token",
 			setupRequest: func() *http.Request {
-				return httptest.NewRequest("GET", "/?token="+expiredTokenStr, nil)
+				return httptest.NewRequest(http.MethodGet, "/?token="+expiredTokenStr, nil)
 			},
 			expectAuth: false,
 		},
 		{
 			name: "err/no_user_claims",
 			setupRequest: func() *http.Request {
-				return httptest.NewRequest("GET", "/?token="+noUserTokenStr, nil)
+				return httptest.NewRequest(http.MethodGet, "/?token="+noUserTokenStr, nil)
 			},
 			expectAuth: false,
 		},
 		{
 			name: "err/invalid_token_format",
 			setupRequest: func() *http.Request {
-				return httptest.NewRequest("GET", "/?token=invalid-token", nil)
+				return httptest.NewRequest(http.MethodGet, "/?token=invalid-token", nil)
 			},
 			expectAuth: false,
 		},
@@ -134,7 +134,7 @@ func TestPasetoAuth_Authenticate(t *testing.T) {
 			name:     "err/blocked_aud",
 			allowAud: []string{"aud456"},
 			setupRequest: func() *http.Request {
-				return httptest.NewRequest("GET", "/?token="+validTokenStr, nil)
+				return httptest.NewRequest(http.MethodGet, "/?token="+validTokenStr, nil)
 			},
 			expectAuth: false,
 		},
@@ -142,7 +142,7 @@ func TestPasetoAuth_Authenticate(t *testing.T) {
 			name:     "err/blocked_iss",
 			allowIss: []string{"test123"},
 			setupRequest: func() *http.Request {
-				return httptest.NewRequest("GET", "/?token="+validTokenStr, nil)
+				return httptest.NewRequest(http.MethodGet, "/?token="+validTokenStr, nil)
 			},
 			expectAuth: false,
 		},
@@ -150,7 +150,7 @@ func TestPasetoAuth_Authenticate(t *testing.T) {
 			name:      "err/blocked_user",
 			allowUser: []string{"user456"},
 			setupRequest: func() *http.Request {
-				return httptest.NewRequest("GET", "/?token="+validTokenStr, nil)
+				return httptest.NewRequest(http.MethodGet, "/?token="+validTokenStr, nil)
 			},
 			expectAuth: false,
 		},

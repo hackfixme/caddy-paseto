@@ -33,7 +33,9 @@ func init() {
 //		allow_issuers <issuer name>...
 //		allow_users <user name>...
 //	}
-func parseCaddyfile(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error) {
+//
+//nolint:funlen,gocognit // the length and complexity are acceptable
+func parseCaddyfile(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error) { //nolint:lll,ireturn // must match httpcaddyfile.UnmarshalHandlerFunc
 	var p PasetoAuth
 
 	for h.Next() {

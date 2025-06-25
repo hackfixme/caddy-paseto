@@ -53,7 +53,7 @@ func (h *TestLogHandler) Handle(_ context.Context, r slog.Record) error {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 
-	var attrs []TestLogAttr
+	attrs := make([]TestLogAttr, 0, len(h.attrs)+r.NumAttrs())
 
 	// Add handler-level attributes
 	for _, attr := range h.attrs {
@@ -190,6 +190,7 @@ func (h *TestLogHandler) MarshalJSON() ([]byte, error) {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
 
+	//nolint:wrapcheck // the returned error is descriptive enough
 	return json.Marshal(map[string]any{
 		"records": *h.records,
 		"count":   len(*h.records),

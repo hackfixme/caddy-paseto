@@ -114,7 +114,7 @@ type PasetoAuth struct {
 	// verification. Otherwise, all users will be allowed.
 	AllowUsers []string `json:"allow_users"`
 
-	// The parsed and decoded key, if validation suceeds.
+	// The parsed and decoded key, if validation succeeds.
 	key    *xpaseto.Key
 	logger *slog.Logger
 }
@@ -165,6 +165,7 @@ func (p *PasetoAuth) Validate() error {
 	var err error
 	p.key, err = xpaseto.LoadKey([]byte(p.Key), p.Version, p.Purpose, xpaseto.KeyTypePublic)
 	if err != nil {
+		//nolint:wrapcheck // the xpaseto error is descriptive enough
 		return err
 	}
 
@@ -173,7 +174,7 @@ func (p *PasetoAuth) Validate() error {
 
 // Authenticate extracts the token according to the module configuration, parses
 // and validates it, and authenticates the user of the request.
-func (p *PasetoAuth) Authenticate(w http.ResponseWriter, r *http.Request) (caddyauth.User, bool, error) {
+func (p *PasetoAuth) Authenticate(_ http.ResponseWriter, r *http.Request) (caddyauth.User, bool, error) {
 	var candidates []string
 	candidates = append(candidates, getTokensFromQuery(r, p.FromQuery)...)
 	candidates = append(candidates, getTokensFromHeader(r, p.FromHeader)...)

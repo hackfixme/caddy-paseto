@@ -1,3 +1,4 @@
+// Package main is a Caddy server with the caddy-paseto module.
 package main
 
 import (

@@ -142,7 +142,7 @@ func stringify(val any) string {
 }
 
 func stringifySlice(slice []any) string {
-	var result []string
+	result := make([]string, 0, len(slice))
 	for _, val := range slice {
 		result = append(result, stringify(val))
 	}
@@ -153,13 +153,14 @@ func stringifySlice(slice []any) string {
 // e.g "IsAdmin -> is_admin" as { Claim: "IsAdmin", Placeholder: "is_admin" }.
 func parseMetaClaim(key string) (claim, placeholder string, err error) {
 	parts := strings.Split(key, "->")
-	if len(parts) == 1 {
+	switch {
+	case len(parts) == 1:
 		claim = strings.TrimSpace(parts[0])
 		placeholder = strings.TrimSpace(parts[0])
-	} else if len(parts) == 2 {
+	case len(parts) == 2:
 		claim = strings.TrimSpace(parts[0])
 		placeholder = strings.TrimSpace(parts[1])
-	} else {
+	default:
 		return "", "", fmt.Errorf("too many delimiters (->) in key %q", key)
 	}
 
