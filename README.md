@@ -14,12 +14,12 @@ This is a [Caddy](https://caddyserver.com/) module that implements HTTP authenti
 
 ## Usage
 
-1. Build a Caddy binary with this module:
+1. Either download a Caddy binary with this module from the [official download site](https://caddyserver.com/download), or build the binary yourself using [xcaddy](https://github.com/caddyserver/xcaddy):
    ```sh
    xcaddy build --with go.hackfix.me/caddy-paseto
    ```
 
-2. Use it in your Caddy configuration:
+2. Use it in your Caddy configuration like so:
    ```Caddyfile
    {
    	order pasetoauth before basicauth
@@ -34,7 +34,7 @@ This is a [Caddy](https://caddyserver.com/) module that implements HTTP authenti
    		from_query token
    		from_header X-Api-Token
    		from_cookies user_session
-   		allow_users "Alice" "Bob"
+   		allow_users Alice Bob
    		allow_issuers https://api.example.com
    		allow_audiences https://api.example.io https://learn.example.com
    		user_claims aud uid user_id username login
